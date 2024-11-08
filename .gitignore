@@ -1,0 +1,46 @@
+# Node modules
+node_modules/
+
+# Compiled output
+dist/
+
+# Optional npm cache directory
+.npm/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.*.local
+
+# nodemon configuration
+nodemon-debug.log
+
+# IDE or editor settings (customize based on your setup)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+
+# MacOS files
+.DS_Store
+
+# Windows System files
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
