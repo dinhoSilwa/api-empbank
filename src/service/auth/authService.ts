@@ -1,4 +1,5 @@
 import type { UserAuth } from "../../@types/auth/userTypes";
+import { TokenManager } from "../../middleware/authToken";
 import { UserAuthModel } from "../../models/auth/schema";
 import { EncryptManager } from "./encrytp";
 
@@ -22,12 +23,11 @@ export class AuthService {
       findUserByEmail.password
     );
 
-    if (!isMatch) return { mag: "Senha incorreta" };
+    if (!isMatch) return { msg: "Senha incorreta" };
     const { name, email: userEmail } = findUserByEmail;
 
-    return {
-      name,
-      userEmail,
-    };
+    const token = TokenManager.getInstance();
+
+    return token.generateToken({ name, userEmail });
   }
 }
