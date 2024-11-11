@@ -5,7 +5,7 @@ export class TokenManager {
   private secretKey: string;
 
   private constructor() {
-    this.secretKey = process.env.JWT_SECRET_KEY || "12345678";
+    this.secretKey = process.env.JWT_SECRET_KEY!;
   }
 
   public static getInstance(): TokenManager {

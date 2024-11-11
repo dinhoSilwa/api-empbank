@@ -1,9 +1,10 @@
 import type { UserAuth } from "../../@types/auth/userTypes";
+import { TokenManager } from "../../middleware/authToken";
 import { UserAuthModel } from "../../models/auth/schema";
 import { EncryptManager } from "./encrytp";
 
 export class AuthService {
-  static async createAuth(user: UserAuth): Promise<UserAuth | any> {
+  static async createAuth(user: UserAuth): Promise<UserAuth> {
     const { name, email, password, role } = user;
     const hashedPassword = await EncryptManager.encryptPassword(password);
     const newUser = { name, email, password: hashedPassword, role };
@@ -13,14 +14,20 @@ export class AuthService {
 
   static async credentials(
     credentials: Pick<UserAuth, "email" | "password">
-  ): Promise<boolean> {
+  ): Promise<any> {
     const { email, password } = credentials;
-    const findEmail = await UserAuthModel.findOne({ email });
-    if (!findEmail) {
-      return false;
-    }
-    const { password: hashedPassword } = findEmail;
-    const isMatch = EncryptManager.comparePassword(password, hashedPassword);
-    return isMatch;
+    const findUserByEmail = await UserAuthModel.findOne({ email });
+    if (!findUserByEmail) return { msg: "Not Found Email" };
+    const isMatch = await EncryptManager.comparePassword(
+      password,
+      findUserByEmail.password
+    );
+
+    if (!isMatch) return { msg: "Senha incorreta" };
+    const { name, email: userEmail } = findUserByEmail;
+
+    const token = TokenManager.getInstance();
+
+    return token.generateToken({ name, userEmail });
   }
 }

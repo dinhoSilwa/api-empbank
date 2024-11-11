@@ -21,7 +21,7 @@ lerna-debug.log*
 
 # Environment variables
 .env
-.env.*.local
+
 
 # nodemon configuration
 nodemon-debug.log
