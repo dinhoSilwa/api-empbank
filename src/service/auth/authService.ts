@@ -5,9 +5,9 @@ import { EncryptManager } from "./encrytp";
 
 export class AuthService {
   static async createAuth(user: UserAuth): Promise<UserAuth> {
-    const { name, email, password, role } = user;
+    const { name, email, password } = user;
     const hashedPassword = await EncryptManager.encryptPassword(password);
-    const newUser = { name, email, password: hashedPassword, role };
+    const newUser = { name, email, password: hashedPassword };
     const userAuthSave = new UserAuthModel(newUser);
     return userAuthSave.save();
   }
