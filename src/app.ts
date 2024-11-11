@@ -4,4 +4,4 @@ import { authRouter } from "./routers/authRouters/auth";
 export const app: Application = express();
 app.use(corsMiddleware);
 app.use(express.json());
-app.use('/api/', authRouter)
+app.use('/api/auth', authRouter)
