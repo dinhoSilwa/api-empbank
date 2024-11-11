@@ -1,10 +1,16 @@
 import { app } from "./app";
 import { configDotenv } from "dotenv";
+import { MongoDBConnection } from "./config/mongoDb/mongoDbConnect";
+
 configDotenv();
 const PORT = process.env.PORT || 3000;
+const uri = process.env.MONGO_URI;
 
 const startServer = async () => {
   try {
+    if (!uri) return console.error("Uri not found");
+    const db = MongoDBConnection.getInstance();
+    await db.connect(uri as string);
     app.listen(PORT, () => {
       console.log(`Server Running on Port : ${PORT}`);
     });
