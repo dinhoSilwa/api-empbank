@@ -27,6 +27,7 @@ export class AuthMiddleware {
       next();
     } catch (err) {
       res.status(404).json({ msg: "Falha ao Gerar o Token" });
+      return;
     }
   };
 
@@ -47,6 +48,7 @@ export class AuthMiddleware {
       const verify = this.JWT.verifyToken(token);
       if (!verify || verify.length === 0 || verify !== typeof "string")
         res.status(200).json({ msg: "Acesso Autorizado" });
+      return;
       next();
     } catch (erro) {
       res.status(500).json({ msg: "Acesso Negado, Erro ao solicitar Token" });

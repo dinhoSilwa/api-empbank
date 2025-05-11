@@ -15,18 +15,28 @@ export class AuthService {
   static async credentials(
     credentials: Pick<UserAuth, "email" | "password">
   ): Promise<any> {
-    const { email, password } = credentials;
-    const findUserByEmail = await UserAuthModel.findOne({ email });
-    if (!findUserByEmail) return { msg: "Not Found Email" };
-    const isMatch = await EncryptManager.comparePassword(
-      password,
-      findUserByEmail.password
-    );
+    try {
+      const { email, password } = credentials;
+      const findUserByEmail = await UserAuthModel.findOne({ email });
 
-    if (!isMatch) return { msg: "Senha incorreta" };
-    const { name, email: userEmail } = findUserByEmail;
-    const manager = TokenManager.getInstance();
-    const token = manager.generateToken({ name, userEmail });
-    return token;
+      if (!findUserByEmail) {
+        throw new Error("Falha ao Encontrar Email");
+      }
+      const isMatch = await EncryptManager.comparePassword(
+        password,
+        findUserByEmail.password
+      );
+
+      if (!isMatch) throw new Error("Senha incorreta");
+      const { name, email: userEmail } = findUserByEmail;
+      const manager = TokenManager.getInstance();
+      const token = manager.generateToken({ name, userEmail });
+      if (!token) {
+        throw new Error("Falha ao Buscar Token");
+      }
+      return token;
+    } catch (err) {
+      console.error({ err });
+    }
   }
 }
