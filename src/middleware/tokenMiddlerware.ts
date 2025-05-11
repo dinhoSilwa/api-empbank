@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { TokenManager } from "../token/tokenManager";
 
 export class AuthMiddleware {
-  constructor(private JWT: TokenManager) {
+  private JWT: TokenManager;
+  constructor() {
     this.JWT = TokenManager.getInstance();
   }
 
@@ -13,17 +14,17 @@ export class AuthMiddleware {
   ): void => {
     const { email, nome } = req.body;
     const createToken = this.JWT.generateToken({ email, nome });
-    if (
-      !createToken ||
-      createToken.length === 0 ||
-      createToken !== typeof "string"
-    ) {
+    console.log("meu token aqui foi criado", createToken);
+    if (!createToken) {
       res.status(404).json({ msg: "Acesso Negado , Token Vazio" });
       return;
     }
+
     try {
       const decode = this.JWT.encodeToken(createToken);
       req.user = decode;
+      res.status(200).json({ decode });
+      next();
     } catch (err) {
       res.status(404).json({ msg: "Falha ao Gerar o Token" });
     }

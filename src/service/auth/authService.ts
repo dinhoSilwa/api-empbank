@@ -1,6 +1,6 @@
 import type { UserAuth } from "../../@types/auth/userTypes";
-import { TokenManager } from "../../middleware/tokenMiddlerware";
 import { UserAuthModel } from "../../models/auth/schema";
+import { TokenManager } from "../../token/tokenManager";
 import { EncryptManager } from "./encrytp";
 
 export class AuthService {
@@ -25,11 +25,8 @@ export class AuthService {
 
     if (!isMatch) return { msg: "Senha incorreta" };
     const { name, email: userEmail } = findUserByEmail;
-    return findUserByEmail;
-
-    // a logica de criação do token deve ser movida para o middleware
-    // const token = TokenManager.getInstance();
-
-    // return token.generateToken({ name, userEmail });
+    const manager = TokenManager.getInstance();
+    const token = manager.generateToken({ name, userEmail });
+    return token;
   }
 }
