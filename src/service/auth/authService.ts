@@ -1,6 +1,6 @@
 import { MongoServerError } from "mongodb";
 import type { UserAuth } from "../../@types/auth/userTypes";
-import { DuplicateKeyError } from "../../errors/customsErros";
+import { DuplicateKeyError } from "../../errors/customsErrors";
 import { UserAuthModel } from "../../models/auth/schema";
 import { TokenManager } from "../../token/tokenManager";
 import { EncryptManager } from "./encrytp";

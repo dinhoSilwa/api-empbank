@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { TokenManager } from "../token/tokenManager";
+import { NotFound, Unauthorized } from "../errors/customsErrors";
 
 export class AuthMiddleware {
   private JWT: TokenManager;
@@ -14,20 +15,16 @@ export class AuthMiddleware {
   ): void => {
     const { email, nome } = req.body;
     const createToken = this.JWT.generateToken({ email, nome });
-    console.log("meu token aqui foi criado", createToken);
     if (!createToken) {
-      res.status(404).json({ msg: "Acesso Negado , Token Vazio" });
-      return;
+      throw new Unauthorized("Acesso Negado");
     }
 
     try {
       const decode = this.JWT.encodeToken(createToken);
       req.user = decode;
-      res.status(200).json({ decode });
       next();
     } catch (err) {
-      res.status(404).json({ msg: "Falha ao Gerar o Token" });
-      return;
+      throw new NotFound("Ocorreu um Erro");
     }
   };
 
@@ -40,19 +37,14 @@ export class AuthMiddleware {
     const token = headers?.split(" ")[1];
 
     if (!token || token.length === 0 || token !== typeof "string") {
-      res.status(404).json({ msg: "Acesso Negado" });
-      return;
+      throw new Unauthorized("Acesso Negado");
     }
 
     try {
       const verify = this.JWT.verifyToken(token);
-      if (!verify || verify.length === 0 || verify !== typeof "string")
-        res.status(200).json({ msg: "Acesso Autorizado" });
-      return;
-      next();
+      if (!verify || verify.length === 0 || verify !== typeof "string") next();
     } catch (erro) {
-      res.status(500).json({ msg: "Acesso Negado, Erro ao solicitar Token" });
-      return;
+      throw new Unauthorized("Error ao verificar Token");
     }
   };
 }
