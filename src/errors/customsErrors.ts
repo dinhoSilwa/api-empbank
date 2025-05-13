@@ -40,3 +40,9 @@ export class DuplicateKeyError extends CustomAppError {
     super(message, httpStatus.CONFLICT);
   }
 }
+
+export class UnfilledFiels extends CustomAppError {
+  constructor(public ErrorOject: any, message = `${ErrorOject},`) {
+    super(message, httpStatus.UNFILLED_FIELDS_ERROR);
+  }
+}
