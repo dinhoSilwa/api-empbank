@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
-import { CustomAppError, DuplicateKeyError } from "../errors/customsErrors";
+import {
+  CustomAppError,
+  DuplicateKeyError,
+  UnfilledFiels,
+} from "../errors/customsErrors";
 
 export const ErrorHandler: ErrorRequestHandler = (
   error: Error & CustomAppError,
@@ -22,6 +26,16 @@ export const ErrorHandler: ErrorRequestHandler = (
           value: error.value,
           suggestion: `Escolha um ${error.field} diferente`,
         },
+      },
+    });
+  }
+
+  if (error instanceof UnfilledFiels) {
+    return res.status(error.statusCode).json({
+      error: {
+        status: error.statusCode,
+        message: "Campos Obrigatórios inválidos",
+        fields: error.ErrorOject,
       },
     });
   }
