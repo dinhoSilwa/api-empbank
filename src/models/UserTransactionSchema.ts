@@ -1,7 +1,7 @@
 import mongoose, { model, Schema } from "mongoose";
-import { ItransactionType } from "../../@types/transactions/transactions";
+import { ItransactionType } from "../@types/transactions/transactions";
 
-export const TransactionMongooseSchema = new Schema(
+export const UserTransactionSchema = new Schema(
   {
     title: { type: String, required: true, unique: true },
     amount: { type: Number, required: true },
@@ -17,5 +17,5 @@ export const TransactionMongooseSchema = new Schema(
 
 export const TransactionModel = model<ItransactionType>(
   "transactions",
-  TransactionMongooseSchema
+  UserTransactionSchema
 );

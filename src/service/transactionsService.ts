@@ -1,6 +1,5 @@
 import { ITransactions } from "../@types/transactions/transactions";
-import { TransactionModel } from "../models/transactions/transactionsModel";
-import { TokenManager } from "../token/tokenManager";
+import { TransactionModel } from "../models/UserTransactionSchema";
 
 export class TransactionService {
   static async create(id: string, transaction: ITransactions) {

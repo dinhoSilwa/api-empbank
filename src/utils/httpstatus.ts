@@ -6,5 +6,5 @@ export enum httpStatus {
   OK = 200,
   UNAUTHORIZED = 401,
   CONFLICT = 409,
-  UNFILLED_FIELDS_ERROR = 404
+  UNFILLED_FIELDS_ERROR = 422,
 }

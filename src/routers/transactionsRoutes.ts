@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { TransactionController } from "../controllers/transactionsController";
-import { createTransactionSchema } from "../schemas/transactionsZodSchema";
-import { zodValidationMiddleware } from "../middleware/validateDtoMiddleware";
+import { createTransactionSchema } from "../mongooseSchemas/transactionsZodSchema";
+import { zodValidationMiddleware } from "../middleware/zodValidationMiddleware";
 export const transactionsRouter = Router();
 transactionsRouter.post(
   "/transactions",
   zodValidationMiddleware(createTransactionSchema),
-  TransactionController.create
+  TransactionController.initiateTransaction
 );
 
 transactionsRouter.get(
   "/transactions",
-  TransactionController.getAllTransactions
+  TransactionController.getUserTransactions
 );

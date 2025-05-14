@@ -1,6 +1,6 @@
 import { MongoServerError, ObjectId } from "mongodb";
 import { UserAuth } from "../@types/auth/userTypes";
-import { UserAuthModel } from "../models/auth/schema";
+import { UserAuthModel } from "../models/UserAuthSchema";
 import { EncryptManager } from "../utils/encrytp";
 import { DuplicateKeyError } from "../errors/customsErrors";
 import { TokenManager } from "../token/tokenManager";
@@ -38,6 +38,7 @@ export class AuthService {
     credentials: Pick<UserAuth, "email" | "password">
   ): Promise<any> {
     const { email, password } = credentials;
+    
     const findUserByEmail = await UserAuthModel.findOne({ email });
 
     if (!findUserByEmail) {

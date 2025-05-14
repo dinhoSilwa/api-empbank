@@ -3,7 +3,7 @@ import { AuthService } from "../service/authService";
 import { httpStatus } from "../utils/httpstatus";
 
 export class AuthController {
-  static async create(
+  static async signupUser(
     req: Request,
     res: Response,
     next: NextFunction
@@ -13,7 +13,7 @@ export class AuthController {
     res.status(httpStatus.OK).json({ name, email });
   }
 
-  static async credentials(req: Request, res: Response): Promise<void> {
+  static async loginUser(req: Request, res: Response): Promise<void> {
     const token = await AuthService.credentials(req.body);
     res.setHeader("Authorization", `Bearer ${token}`);
     res.status(httpStatus.OK).json({ msg: "Acesso Liberado", token });
