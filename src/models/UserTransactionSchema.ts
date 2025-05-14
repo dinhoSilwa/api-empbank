@@ -3,7 +3,7 @@ import { ItransactionType } from "../@types/transactions/transactions";
 
 export const UserTransactionSchema = new Schema(
   {
-    title: { type: String, required: true, unique: true },
+    title: { type: String, required: true, unique: false },
     amount: { type: Number, required: true },
     category: { type: String, required: true },
     transactionType: { type: String, required: true },

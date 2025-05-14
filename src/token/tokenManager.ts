@@ -1,7 +1,11 @@
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { configDotenv } from "dotenv";
-import { Unauthorized } from "../errors/customsErrors";
+import {
+  BadRequest,
+  TokenExpired,
+  Unauthorized,
+} from "../errors/customsErrors";
 configDotenv();
 
 const SECRET = process.env.JWT_SECRET_KEY as string;
@@ -36,6 +40,16 @@ export class TokenManager {
   }
 
   public verifyToken(token: string): JwtPayload | string | null | any {
-    return jwt.verify(token, this.secretKey);
+    try {
+      return jwt.verify(token, this.secretKey);
+    } catch (err) {
+      if (err instanceof TokenExpiredError) {
+        throw new TokenExpired("Token expirado.");
+      }
+      if (err instanceof JsonWebTokenError) {
+        throw new BadRequest("Token inválido.");
+      }
+      throw new BadRequest("Erro Desconhecido");
+    }
   }
 }

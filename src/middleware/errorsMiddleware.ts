@@ -4,6 +4,7 @@ import {
   DuplicateKeyError,
   UnfilledFiels,
 } from "../errors/customsErrors";
+import { TokenExpiredError } from "jsonwebtoken";
 
 export const ErrorHandler: ErrorRequestHandler = (
   error: Error & CustomAppError,
@@ -40,6 +41,14 @@ export const ErrorHandler: ErrorRequestHandler = (
     });
   }
 
+  if (error instanceof TokenExpiredError) {
+    return res.status(error.statusCode).json({
+      error: {
+        status: error.statusCode,
+        message: error.message,
+      },
+    });
+  }
   return res.status(statusCode).json({
     error: {
       statusCode: error.statusCode,
