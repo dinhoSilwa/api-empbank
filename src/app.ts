@@ -8,12 +8,13 @@ import { NotFound } from "./errors/customsErrors";
 import { httpStatus } from "./utils/httpstatus";
 import { transactionsRouter } from "./routers/transactionsRoutes";
 import { AuthMiddleware } from "./middleware/tokenMiddleware";
+import { limitHard, limitSuite } from "./middleware/rateLimit";
 export const app: Application = express();
 const auth = new AuthMiddleware();
 app.use(corsMiddleware);
 app.use(express.json());
-app.use("/api/auth", authRouter);
-app.use("/api", auth.verifyToken, transactionsRouter);
+app.use("/api/auth", limitHard, authRouter);
+app.use("/api", auth.verifyToken, limitSuite, transactionsRouter);
 app.get("/", (req: Request, res: Response) => {
   res
     .status(200)

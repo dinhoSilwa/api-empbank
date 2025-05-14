@@ -1,28 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { TokenManager } from "../token/tokenManager";
-import { NotFound, Unauthorized } from "../errors/customsErrors";
+import { Unauthorized } from "../errors/customsErrors";
 
 export class AuthMiddleware {
   private JWT: TokenManager;
   constructor() {
     this.JWT = TokenManager.getInstance();
   }
-
-  public createToken = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): void => {
-    const { email, nome } = req.body;
-    const createToken = this.JWT.generateToken({ email, nome });
-
-    if (!createToken) {
-      throw new Unauthorized("Acesso Negado");
-    }
-    const decode = this.JWT.encodeToken(createToken as string);
-    req.user = decode;
-    next();
-  };
 
   public verifyToken = (
     req: Request,
@@ -38,7 +22,8 @@ export class AuthMiddleware {
 
     try {
       const verify = this.JWT.verifyToken(token);
-      if (!verify) next();
+      if (verify) req.user = verify;
+      next();
     } catch (erro) {
       throw new Unauthorized("Error ao verificar Token");
     }
