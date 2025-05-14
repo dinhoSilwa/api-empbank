@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/authController";
 import { zodValidationMiddleware } from "../middleware/zodValidationMiddleware";
-import { authSignupSchema } from "../mongooseSchemas/authSchema";
+import { authLoginSchema, authSignupSchema } from "../mongooseSchemas/authSchema";
 export const authRouter = Router();
 authRouter.post(
   "/signup",
@@ -10,6 +10,6 @@ authRouter.post(
 );
 authRouter.post(
   "/login",
-  zodValidationMiddleware(authSignupSchema),
+  zodValidationMiddleware(authLoginSchema),
   AuthController.loginUser
 );
