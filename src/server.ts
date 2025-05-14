@@ -2,7 +2,7 @@ import express, { Response, Request } from "express";
 import { app } from "./app";
 import { configDotenv } from "dotenv";
 import { MongoDBConnection } from "./config/mongoDb/mongoDbConnect";
-import { NotFound } from "./errors/customsErros";
+import { NotFound } from "./errors/customsErrors";
 
 configDotenv();
 const PORT = process.env.PORT || 3000;

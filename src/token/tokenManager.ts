@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { configDotenv } from "dotenv";
+import { Unauthorized } from "../errors/customsErrors";
 configDotenv();
 
 const SECRET = process.env.JWT_SECRET_KEY as string;
@@ -12,7 +13,7 @@ export class TokenManager {
   private constructor() {
     this.secretKey = SECRET || "";
     if (!this.secretKey) {
-      throw new Error("Falha ao obter token");
+      throw new Unauthorized("Falha ao obter token");
     }
   }
 
@@ -25,38 +26,16 @@ export class TokenManager {
 
   public generateToken(
     payload: object,
-    expiresIn: string = "1h"
-  ): string | null {
-    try {
-      return jwt.sign(payload, this.secretKey, { expiresIn });
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Falha gerar Token ${error.message}`);
-      }
-      throw new Error("Falha ao gerar Token , erro desconhecido");
-    }
+    expiresIn: string = process.env.NODE_ENV === "production" ? "8h" : "1h"
+  ): string | Error {
+    return jwt.sign(payload, this.secretKey, { expiresIn });
   }
 
-  public encodeToken(token: string): JwtPayload | null {
-    try {
-      if (!token) return null;
-      return jwt.decode(token) as JwtPayload;
-    } catch (error) {
-      if (error instanceof Error)
-        throw new Error(`Falha ao encodificar o Token ${error.message}`);
-    }
-    throw new Error("Falha ao encodificar o Token, erro desconhecido");
+  public encodeToken(token: string): JwtPayload | Error | string {
+    return jwt.decode(token) as JwtPayload;
   }
 
-  public verifyToken(token: string): JwtPayload | string | null {
-    try {
-      if (!token) return null;
-      return jwt.verify(token, this.secretKey);
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new Error(`Falha ao verificar o Token ${error.message}`);
-      }
-      throw new Error("Falha ao verificar o Token");
-    }
+  public verifyToken(token: string): JwtPayload | string | null | any {
+    return jwt.verify(token, this.secretKey);
   }
 }
