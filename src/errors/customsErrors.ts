@@ -46,3 +46,9 @@ export class UnfilledFiels extends CustomAppError {
     super(message, httpStatus.UNFILLED_FIELDS_ERROR);
   }
 }
+
+export class TokenExpired extends CustomAppError {
+  constructor(message: string) {
+    super(message, httpStatus.UNAUTHORIZED);
+  }
+}
